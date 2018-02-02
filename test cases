@@ -1,0 +1,13 @@
+front
+
+Login
+    wrong email
+    wrong password
+    incorrect email format
+    empty fields
+    correct data
+
+Exchange
+    exchange with empty fields
+    exchange with negative amount from
+    exchange with negative amount to
