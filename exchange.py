@@ -66,6 +66,29 @@ class Exchange(unittest.TestCase):
 		# check that 2 error messages are displayed
 		self.assertEqual(len(error_fields_is_reqiered), 2)
 
+	def test_exchange_same_currency(self):
+		driver = self.driver
+		exchage_link = driver.find_element_by_link_text('Exchange')
+		exchage_link.click()
+		exhange_title = driver.find_element_by_class_name('exchange-title')
+		exhange_title.is_displayed()
+		# grab currency to
+		currency_to = driver.find_element_by_id("md-input-14scx0m8b")
+		currency_to_value = currency_to.text
+		#currency_to.click()
+		#currency_to_value = driver.
+
+		# find currency from
+		currency_from = driver.find_element_by_id("md-input-env1f0y3f")
+		give_btc = driver.find_element_by_id("amount_to-control")
+		give_btc.send_keys("-2")
+		# press exchange button
+		button = driver.find_element_by_css_selector("button[class ='btn col-xs-12 exchange-submit__btn btn-primary']")
+		button.click()
+		error_fields_is_reqiered = driver.find_elements_by_class_name("md-error")
+		# check that 2 error messages are displayed
+		self.assertEqual(len(error_fields_is_reqiered), 2)
+
 
 if __name__ == "__main__":
 	unittest.main()
