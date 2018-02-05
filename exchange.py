@@ -111,7 +111,11 @@ class Exchange(unittest.TestCase):
 		account_dropdown = driver.find_element_by_css_selector("li[class='account dropdown']")
 		wallet = driver.find_element_by_link_text("Wallet")
 		#dropdown = ActionChains(driver)
-		dropdown = ActionChains(driver).move_to_element(account_dropdown).context_click(wallet).perform()
+		dropdown = ActionChains(driver)\
+			.move_to_element(account_dropdown)\
+			.move_to_element(driver.find_element_by_id("account-dropdown"))\
+			.context_click(wallet)\
+			.perform()
 		driver.save_screenshot('account_dropdown.png')
 		#dropdown.move_to_element(wallet).click().perform()
 		#dropdown.click(wallet)
