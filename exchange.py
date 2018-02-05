@@ -1,6 +1,7 @@
 import unittest
 from ddt import ddt, unpack, data
 from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
 
 @ddt
 class Exchange(unittest.TestCase):
@@ -66,6 +67,57 @@ class Exchange(unittest.TestCase):
 		# check that 2 error messages are displayed
 		self.assertEqual(len(error_fields_is_reqiered), 2)
 
+	def test_exchange_with_not_numeric_amount_to(self):
+		driver = self.driver
+		exchage_link = driver.find_element_by_link_text('Exchange')
+		exchage_link.click()
+		exhange_title = driver.find_element_by_class_name('exchange-title')
+		exhange_title.is_displayed()
+		# find amount from field
+		give_btc = driver.find_element_by_id("amount_to-control")
+		give_btc.send_keys("test")
+		# press exchange button
+		button = driver.find_element_by_css_selector("button[class ='btn col-xs-12 exchange-submit__btn btn-primary']")
+		button.click()
+		error_fields_is_reqiered = driver.find_elements_by_class_name("md-error")
+		# check that 2 error messages are displayed
+		self.assertEqual(len(error_fields_is_reqiered), 3)
+
+	def test_exchange_with_not_numeric_amount_from(self):
+		driver = self.driver
+		exchage_link = driver.find_element_by_link_text('Exchange')
+		exchage_link.click()
+		exhange_title = driver.find_element_by_class_name('exchange-title')
+		exhange_title.is_displayed()
+		# find amount from field
+		give_btc = driver.find_element_by_id("amount_from-control")
+		give_btc.send_keys("test")
+		# press exchange button
+		button = driver.find_element_by_css_selector("button[class ='btn col-xs-12 exchange-submit__btn btn-primary']")
+		button.click()
+		error_fields_is_reqiered = driver.find_elements_by_class_name("md-error")
+		# check that 2 error messages are displayed
+		self.assertEqual(len(error_fields_is_reqiered), 3)
+
+	def test_exchange_with_amount_from_bigger_than_amount_in_wallet(self):
+		driver = self.driver
+		current_language = driver.find_element_by_css_selector("li[class='language dropdown']").text
+		if current_language == "EN":
+			pass
+		else:
+			current_language.click()
+			language_dropdown = driver.find_element_by_class_name("dropdown-toggle")
+			en = driver.find_element_by_link_text("en").click()
+		account_dropdown = driver.find_element_by_css_selector("li[class='account dropdown']")
+		wallet = driver.find_element_by_link_text("Wallet")
+		#dropdown = ActionChains(driver)
+		dropdown = ActionChains(driver).move_to_element(account_dropdown).context_click(wallet).perform()
+		driver.save_screenshot('account_dropdown.png')
+		#dropdown.move_to_element(wallet).click().perform()
+		#dropdown.click(wallet)
+
+
+
 	def test_exchange_same_currency(self):
 		driver = self.driver
 		exchage_link = driver.find_element_by_link_text('Exchange')
@@ -73,15 +125,16 @@ class Exchange(unittest.TestCase):
 		exhange_title = driver.find_element_by_class_name('exchange-title')
 		exhange_title.is_displayed()
 		# grab currency to
-		currency_to = driver.find_element_by_id("md-input-14scx0m8b")
-		currency_to_value = currency_to.text
+		#currency_to = driver.find_element_by_id("md-input-14scx0m8b")
+		#currency_to_value = currency_to.text
 		#currency_to.click()
 		#currency_to_value = driver.
 
 		# find currency from
-		currency_from = driver.find_element_by_id("md-input-env1f0y3f")
-		give_btc = driver.find_element_by_id("amount_to-control")
-		give_btc.send_keys("-2")
+		currency_from = driver.find_element_by_class_name("md-input md-input md-select-value")
+		currency_from.click()
+		select_currency_usd = driver.find_element_by_class_name()
+
 		# press exchange button
 		button = driver.find_element_by_css_selector("button[class ='btn col-xs-12 exchange-submit__btn btn-primary']")
 		button.click()

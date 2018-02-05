@@ -11,3 +11,5 @@ Exchange
     exchange with empty fields
     exchange with negative amount from
     exchange with negative amount to
+    exchange with not numeric amount to
+    exchange with not numeric amount from
