@@ -2,6 +2,9 @@ import unittest
 from ddt import ddt, unpack, data
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
 @ddt
 class Exchange(unittest.TestCase):
@@ -108,17 +111,33 @@ class Exchange(unittest.TestCase):
 			current_language.click()
 			language_dropdown = driver.find_element_by_class_name("dropdown-toggle")
 			en = driver.find_element_by_link_text("en").click()
+		# go to wallet page
 		account_dropdown = driver.find_element_by_css_selector("li[class='account dropdown']")
-		wallet = driver.find_element_by_link_text("Wallet")
-		#dropdown = ActionChains(driver)
 		dropdown = ActionChains(driver)\
 			.move_to_element(account_dropdown)\
-			.move_to_element(driver.find_element_by_id("account-dropdown"))\
-			.context_click(wallet)\
+			.click(driver.find_element_by_xpath("//a[@href='/wallets']"))\
 			.perform()
+		# grab btc balance
+		wait = WebDriverWait(driver, 20)
+		wait.until(EC.presence_of_element_located((By.XPATH, ".//tr[1]//td[2]")))
+		btc_balance = driver.find_element_by_xpath(".//tr[1]//td[2]").text
+		# go to exchange page
+		exchage_link = driver.find_element_by_link_text('Exchange')
+		exchage_link.click()
+		exhange_title = driver.find_element_by_class_name('exchange-title')
+		exhange_title.is_displayed()
+		# find amount from field
+		give_btc = driver.find_element_by_id("amount_from-control")
+		exchange_btc = float(btc_balance) + int(1)
+		give_btc.send_keys(str(exchange_btc))
+		# press exchange button
+		button = driver.find_element_by_css_selector("button[class ='btn col-xs-12 exchange-submit__btn btn-primary']")
+		button.click()
+		error_fields = driver.find_elements_by_class_name("md-error")
 		driver.save_screenshot('account_dropdown.png')
-		#dropdown.move_to_element(wallet).click().perform()
-		#dropdown.click(wallet)
+		# check that 1 error messages are displayed
+		self.assertEqual(len(error_fields), 1)
+
 
 
 
